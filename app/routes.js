@@ -1,9 +1,8 @@
 const express = require('express'),
-      router  = express.Router();
+      router  = express.Router(),
+      controller = require('./controller');
 
 module.exports = router;
 
-router.get('/', (req,res) => {
-    res.send('');
-});
+router.get('/', controller.showHome);
 
