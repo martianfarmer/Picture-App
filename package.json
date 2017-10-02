@@ -1,0 +1,16 @@
+{
+  "name": "picture-app",
+  "version": "1.0.0",
+  "description": "App to pull all pictures from A customers store",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "the-transgineer",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.1",
+    "jszip": "^3.1.4"
+  }
+}
