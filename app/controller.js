@@ -29,7 +29,7 @@ module.exports = {
           const foo = JSON.parse(body);
 
           foo.forEach((i, j) => {
-              let name = i.name;
+              let name = i.name.replace(/\s/g,'');
               let url = i.images.url;
               options.url = url;
               request.get(options, (err, response, body) => {
