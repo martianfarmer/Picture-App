@@ -25,14 +25,16 @@ module.exports = {
           const foo = JSON.parse(body);
 
           foo.forEach((i, j) => {
+              let name = i.name;
               let url = i.images.url;
               options.url = url;
               request.get(options, (err, response, body) => {
                   let data = JSON.parse(body);
                   for(let x = 0; x < data.length; x++){
                       let i = data[x];
-                      let url = i.standard_url;
-                      download(url, `images/${i.product_id}-${x}`,() => {
+                      console.log(i);
+                      let url = i.zoom_url;
+                      download(url, `images/${name}${x === 0 ? '': '-'+x}`,() => {
                           setTimeout(() => {
                               if(j === foo.length - 1 && x === data.length -1 ){
                                   let output = fs.createWriteStream(__dirname + '/example.zip');
@@ -51,7 +53,7 @@ module.exports = {
                                   archive.directory(path.join(__dirname, '../', '/images/'), false);
                                   archive.finalize();
                               }
-                          }, 1000)
+                          },80)
                       })
                   }
               })
