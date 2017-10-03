@@ -21,6 +21,9 @@ module.exports = {
           }
       };
 
+      fs.mkdir(path.join(__dirname,'../',`images${id}/`), () => {
+          console.log('Created '+id)
+      });
 
       request.get(options, (err, response, body) => {
           const foo = JSON.parse(body);
@@ -34,7 +37,7 @@ module.exports = {
                   for(let x = 0; x < data.length; x++){
                       let i = data[x];
                       let url = i.zoom_url;
-                      download(url, `images/${name}${x === 0 ? '': '-'+x}`,() => {
+                      download(url, `images${id}/${name}${x === 0 ? '': '-'+x}`,() => {
                           setTimeout(() => {
                               if(j === foo.length - 1 && x === data.length -1 ){
                                   let output = fs.createWriteStream(__dirname + '/pictures.zip');
@@ -45,14 +48,14 @@ module.exports = {
 
                                   output.on('close', () => {
                                       res.download(__dirname + '/pictures.zip',() => {
-                                         deleteImages();
+                                         deleteImages(id);
                                       });
 
                                   });
 
 
                                   archive.pipe(output);
-                                  archive.directory(path.join(__dirname, '../', '/images/'), false);
+                                  archive.directory(path.join(__dirname, '../', `/images${id}/`), false);
                                   archive.finalize();
                               }
                           },80)
@@ -96,11 +99,8 @@ const download = function(uri, filename, callback){
     });
 };
 
-const deleteImages = () => {
-    let imagesPath = path.join(__dirname,'../','images/');
+const deleteImages = id => {
+    let imagesPath = path.join(__dirname,'../',`images${id}/`);
     rimraf(imagesPath, () => {
-        fs.mkdir(imagesPath, () => {
-            console.log('Cleaned Up')
-        })
     })
 };
