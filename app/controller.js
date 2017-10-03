@@ -1,43 +1,57 @@
 const  fs = require('fs'),
        path = require('path'),
-       JSZip = require('jszip'),
        request = require('request'),
-       Emitter = require('events');
+       archiver = require('archiver');
 
-class MyEmitter extends Emitter{}
 
 module.exports = {
   showHome : (req,res) => {
 
-      const controller = new MyEmitter();
+      /*const url = 'https://api.bigcommerce.com/stores/et6hidb37e/v2/products';
+      const id = 'ris8bseq50w7i9b0h4cynycftc4zbj8';
+      const token = 'svop48vqxuyalh0ayhj8vro7vqivju7';
 
-      let zip = new JSZip();
-      zip.folder('Pictures');
+      const options = {
+          url: url,
+          headers: {
+              'Accept': 'application/json',
+              'X-Auth-Client': id,
+              'X-Auth-Token' : token
+          }
+      };
 
-      download('https://www.google.com/images/srpr/logo3w.png', 'google.png', function(){
-          zip.file("Pictures/google.png", (path.join(__dirname,'../', 'google.png')));
-          controller.emit('done');
+      request.get(options, (err, response, body) => {
+          const data = JSON.parse(body);
+          let arr = [];
+      })*/
+
+      download('https://www.google.com/images/srpr/logo3w.png', 'images/google.png', () => {
+         let output = fs.createWriteStream(__dirname + '/example.zip');
+
+         let archive = archiver('zip', {
+            zlib: {level: 9}
+         });
+
+          output.on('close', () => {
+              console.log(archive.pointer() + 'total bytes');
+              console.log('archive has been finalized and the output file has been closed');
+              res.sendFile(__dirname + '/example.zip');
+
+          });
+
+
+          archive.pipe(output);
+          archive.directory(path.join(__dirname, '../', '/images/'), false);
+          archive.finalize();
+
       });
 
-      controller.on('done', () =>{
 
-         zip.generateNodeStream({type: 'nodebuffer', streamFiles:true})
-             .pipe(fs.createWriteStream('out.zip'))
-             .on('finish', () =>{
-                 let file = path.join(__dirname, '../','out.zip');
-                 res.sendFile(file)
-                     /*.then(() => {
-                         console.log('file sent');
-                         fs.unlink(file);
-                     })*/
-             })
-
-      })
   }
 };
 
 const download = function(uri, filename, callback){
-    request.head(uri, function(err, res, body){
+    request.get(uri, function(err, res, body){
 
         request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
 

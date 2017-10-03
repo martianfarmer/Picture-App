@@ -9,6 +9,9 @@
   "author": "the-transgineer",
   "license": "ISC",
   "dependencies": {
+    "adm-zip": "^0.4.7",
+    "adm-zip-fix": "^1.0.0",
+    "archiver": "^2.0.3",
     "body-parser": "^1.18.2",
     "express": "^4.16.1",
     "fs": "0.0.1-security",
