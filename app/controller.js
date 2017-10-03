@@ -1,7 +1,8 @@
 const  fs = require('fs'),
        path = require('path'),
        request = require('request'),
-       archiver = require('archiver');
+       archiver = require('archiver'),
+       rimraf  = require('rimraf');
 
 module.exports = {
   showHome : (req,res) => {
@@ -32,19 +33,20 @@ module.exports = {
                   let data = JSON.parse(body);
                   for(let x = 0; x < data.length; x++){
                       let i = data[x];
-                      console.log(i);
                       let url = i.zoom_url;
                       download(url, `images/${name}${x === 0 ? '': '-'+x}`,() => {
                           setTimeout(() => {
                               if(j === foo.length - 1 && x === data.length -1 ){
-                                  let output = fs.createWriteStream(__dirname + '/example.zip');
+                                  let output = fs.createWriteStream(__dirname + '/pictures.zip');
 
                                   let archive = archiver('zip', {
                                       zlib: {level: 9}
                                   });
 
                                   output.on('close', () => {
-                                      res.sendFile(__dirname + '/example.zip');
+                                      res.download(__dirname + '/pictures.zip',() => {
+                                         deleteImages();
+                                      });
 
                                   });
 
@@ -92,4 +94,13 @@ const download = function(uri, filename, callback){
         request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
 
     });
+};
+
+const deleteImages = () => {
+    let imagesPath = path.join(__dirname,'../','images/');
+    rimraf(imagesPath, () => {
+        fs.mkdir(imagesPath, () => {
+            console.log('Cleaned Up')
+        })
+    })
 };
