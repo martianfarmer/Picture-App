@@ -37,7 +37,7 @@ module.exports = {
                   for(let x = 0; x < data.length; x++){
                       let i = data[x];
                       let url = i.zoom_url;
-                      download(url, `images${id}/${name}${x === 0 ? '': '-'+x}`,() => {
+                      download(url, `images${id}/${name}${x === 0 ? '': '-'+ pad(x, 4)}`,() => {
                           setTimeout(() => {
                               if(j === foo.length - 1 && x === data.length -1 ){
                                   let output = fs.createWriteStream(__dirname + '/pictures.zip');
@@ -102,5 +102,12 @@ const download = function(uri, filename, callback){
 const deleteImages = id => {
     let imagesPath = path.join(__dirname,'../',`images${id}/`);
     rimraf(imagesPath, () => {
+        console.log('removed folder');
     })
 };
+
+const pad = (n, width, z) => {
+    z = z || '0';
+    n = n + '';
+    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+}
