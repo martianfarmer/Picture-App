@@ -13,6 +13,7 @@
     "adm-zip-fix": "^1.0.0",
     "archiver": "^2.0.3",
     "body-parser": "^1.18.2",
+    "events": "^1.1.1",
     "express": "^4.16.1",
     "fs": "0.0.1-security",
     "jszip": "^3.1.4",
