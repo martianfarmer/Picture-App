@@ -71,7 +71,7 @@ module.exports = {
   },
 
   showHome: (req,res) => {
-      res.send('home');
+      res.sendFile(path.join(__dirname, '../', 'index.html'));
   }
 };
 
